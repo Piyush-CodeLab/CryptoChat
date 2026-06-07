@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
-CodeX PQ-SC — Hybrid Post-Quantum Secure Channel
+CryptoChat PQ-SC — Hybrid Post-Quantum Secure Channel
 Backend WebSocket Server
-ML-KEM (Kyber768) Handshake + Serpent-CBC Message Encryption
 """
 
 import asyncio
@@ -266,7 +265,7 @@ class KEMEngine:
             log_entries.append({
                 "event": "kem_decap",
                 "detail": f"Bob decapsulated — Secrets match: {match}",
-                "secret_preview": shared_secret[:16].hex() + "...",
+                "secret_preview": shared_secret.hex(),
                 "key_length": len(shared_secret) * 8,
                 "timestamp": time.time()
             })
@@ -294,7 +293,7 @@ class KEMEngine:
             log_entries.append({
                 "event": "kem_decap",
                 "detail": f"Bob decapsulated — Secrets match: True [simulated]",
-                "secret_preview": shared_secret[:16].hex() + "...",
+                "secret_preview": shared_secret.hex(),
                 "key_length": len(shared_secret) * 8,
                 "timestamp": time.time()
             })
@@ -586,7 +585,7 @@ def health_check(connection, request):
 
 async def main():
     print("=" * 60)
-    print("  CodeX PQ-SC — Quantum-Resistant Secure Channel Server")
+    print("  CryptoChat PQ-SC — Quantum-Resistant Secure Channel Server")
     print("  ML-KEM (Kyber768) + Serpent-256-CBC [P2P Auth Mode]")
     print("=" * 60)
     print(f"  Listening on ws://0.0.0.0:8765")

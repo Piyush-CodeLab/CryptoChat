@@ -45,8 +45,13 @@ function LogEntry({ log }) {
           )}
           {(log.pk_preview || log.ct_preview || log.secret_preview) && (
             <div className="mt-2 rounded-lg px-3 py-2" style={{ background: "var(--bg-primary)", border: "1px solid var(--border)" }}>
-              <p className="text-[10px] break-all font-mono" style={{ color: "var(--text-muted)" }}>{log.pk_preview || log.ct_preview || log.secret_preview}</p>
-              {log.key_length && <p className="text-[9px] mt-1 font-semibold" style={{ color: c.color }}>Key Length: {log.key_length}-bit</p>}
+              <div className="text-[8px] font-bold uppercase tracking-widest mb-1.5" style={{ color: "var(--text-muted)" }}>
+                {log.pk_preview ? "Public Key Preview (Hex)" : log.ct_preview ? "Ciphertext Preview (Hex)" : "Shared Secret Key (256-bit Hex)"}
+              </div>
+              <p className="text-[10px] break-all font-mono select-all" style={{ color: "var(--text-primary)", userSelect: "all" }}>
+                {log.pk_preview || log.ct_preview || log.secret_preview}
+              </p>
+              {log.key_length && <p className="text-[9px] mt-1.5 font-semibold" style={{ color: c.color }}>Key Length: {log.key_length}-bit</p>}
             </div>
           )}
         </div>

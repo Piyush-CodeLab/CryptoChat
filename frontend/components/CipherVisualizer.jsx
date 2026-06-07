@@ -158,7 +158,7 @@ function hexToWords(hex) {
 }
 
 export default function CipherVisualizer() {
-  const [message, setMessage] = useState("Hello CodeX PQ!");
+  const [message, setMessage] = useState("Hello CryptoChat PQ!");
   const [cipherKey, setCipherKey] = useState("quantum_safe_key_2026");
   
   // Encryption Simulator States

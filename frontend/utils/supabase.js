@@ -16,9 +16,9 @@ export const supabase = !isPlaceholder ? createClient(supabaseUrl, supabaseAnonK
 
 // Mock database for testing when credentials are not yet set
 const mockUsers = [
-  { email: "alice@codex.pq", password: "password123", id: "user_alice_uid", name: "Alice Security" },
-  { email: "bob@codex.pq", password: "password123", id: "user_bob_uid", name: "Bob Cyber" },
-  { email: "charlie@codex.pq", password: "password123", id: "user_charlie_uid", name: "Charlie Admin" }
+  { email: "alice@cryptochat.pq", password: "password123", id: "user_alice_uid", name: "Alice Security" },
+  { email: "bob@cryptochat.pq", password: "password123", id: "user_bob_uid", name: "Bob Cyber" },
+  { email: "charlie@cryptochat.pq", password: "password123", id: "user_charlie_uid", name: "Charlie Admin" }
 ];
 
 export const mockAuth = {
@@ -35,7 +35,7 @@ export const mockAuth = {
     if (found) {
       return { data: { user: found, session: { access_token: "mock_jwt_token" } }, error: null };
     }
-    return { data: { user: null, session: null }, error: { message: "Invalid email or password. Hint: Use alice@codex.pq / password123 or bob@codex.pq / password123" } };
+    return { data: { user: null, session: null }, error: { message: "Invalid email or password. Hint: Use alice@cryptochat.pq / password123 or bob@cryptochat.pq / password123" } };
   },
   signOut: async () => {
     return { error: null };

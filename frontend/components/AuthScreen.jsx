@@ -95,7 +95,7 @@ export default function AuthScreen({ onAuthSuccess }) {
             <div className="text-[10px] text-amber-300 leading-normal">
               <strong>Local Mock Mode Active</strong><br />
               Supabase env variables not found. Sign up any user or use credentials:<br />
-              <code className="text-white bg-black/40 px-1 py-0.5 rounded">alice@codex.pq</code> / <code className="text-white bg-black/40 px-1 py-0.5 rounded">password123</code>
+              <code className="text-white bg-black/40 px-1 py-0.5 rounded">alice@cryptochat.pq</code> / <code className="text-white bg-black/40 px-1 py-0.5 rounded">password123</code>
             </div>
           </div>
         )}
@@ -132,7 +132,7 @@ export default function AuthScreen({ onAuthSuccess }) {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="alice@codex.pq"
+                placeholder="alice@cryptochat.pq"
                 className="bg-transparent text-xs outline-none w-full text-white placeholder:text-[var(--text-muted)]"
               />
             </div>
