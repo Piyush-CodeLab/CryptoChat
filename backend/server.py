@@ -555,6 +555,14 @@ async def handler(websocket):
             await broadcast_users_list()
 
 
+from http import HTTPStatus
+
+def health_check(connection, request):
+    # Intercept HTTP HEAD and health check paths to keep Render deployment healthy
+    if request.path in ("/", "/healthz") or request.method == "HEAD":
+        return connection.respond(HTTPStatus.OK, "OK\n")
+    return None
+
 async def main():
     print("=" * 60)
     print("  CodeX PQ-SC — Quantum-Resistant Secure Channel Server")
@@ -563,7 +571,7 @@ async def main():
     print(f"  Listening on ws://0.0.0.0:8765")
     print("=" * 60)
 
-    async with websockets.serve(handler, "0.0.0.0", 8765):
+    async with websockets.serve(handler, "0.0.0.0", 8765, process_request=health_check):
         await asyncio.Future()  # Run forever
 
 
