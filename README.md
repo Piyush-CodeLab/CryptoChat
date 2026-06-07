@@ -1,4 +1,4 @@
-# CodeX PQ-SC — Post-Quantum Secure Channel
+# CryptoChat PQ-SC — Post-Quantum Secure Channel
 
 End-to-End Encrypted messaging with **ML-KEM (Kyber768)** handshake and **Serpent-256-CBC** cipher.
 
