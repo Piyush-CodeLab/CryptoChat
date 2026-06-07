@@ -7,12 +7,31 @@ ML-KEM (Kyber768) Handshake + Serpent-CBC Message Encryption
 
 import asyncio
 import websockets
+import websockets.http11
 import json
 import os
 import hashlib
 import struct
 import time
 import traceback
+
+# Monkeypatch websockets HTTP parser to allow HEAD requests (for Render health checks)
+_original_request_parse = websockets.http11.Request.parse
+
+def make_wrapped_read_line(original_read_line):
+    def wrapped_read_line(limit):
+        line = yield from original_read_line(limit)
+        if line.startswith(b"HEAD "):
+            line = b"GET " + line[5:]
+        return line
+    return wrapped_read_line
+
+@classmethod
+def custom_request_parse(cls, read_line):
+    wrapped = make_wrapped_read_line(read_line)
+    return (yield from _original_request_parse(wrapped))
+
+websockets.http11.Request.parse = custom_request_parse
 
 # ═══════════════════════════════════════════════════════════════
 # SERPENT BLOCK CIPHER — Pure Python Reference Implementation
@@ -558,8 +577,10 @@ async def handler(websocket):
 from http import HTTPStatus
 
 def health_check(connection, request):
-    # Intercept HTTP HEAD and health check paths to keep Render deployment healthy
-    if request.path in ("/", "/healthz") or request.method == "HEAD":
+    # Intercept non-websocket HTTP requests (like HEAD or health checks) to keep Render healthy,
+    # while allowing real WebSocket upgrade requests to pass through.
+    is_websocket = "upgrade" in request.headers and request.headers["upgrade"].lower() == "websocket"
+    if not is_websocket:
         return connection.respond(HTTPStatus.OK, "OK\n")
     return None
 
