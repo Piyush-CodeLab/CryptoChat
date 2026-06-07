@@ -14,7 +14,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata = {
-  title: "CodeX PQ-SC — Quantum-Resistant Secure Messaging",
+  title: "CryptoChat PQ-SC — Quantum-Resistant Secure Messaging",
   description:
     "End-to-End Encrypted messaging with ML-KEM (Kyber768) handshake and Serpent-256-CBC cipher. Post-quantum secure communication channel.",
   keywords: ["encryption", "post-quantum", "kyber", "serpent", "e2ee", "messaging"],
