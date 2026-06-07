@@ -1,4 +1,1 @@
 websockets>=12.0
-asyncio-extras>=1.3
-liboqs-python>=0.9.0
-pyserpent>=0.0.1
