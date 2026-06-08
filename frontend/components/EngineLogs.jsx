@@ -36,11 +36,11 @@ function LogEntry({ log }) {
           <p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>{log.detail}</p>
           {log.hex && (
             <div className="mt-2 rounded-lg px-3 py-2 overflow-hidden" style={{ background: "var(--bg-primary)", border: "1px solid var(--border)" }}>
-              <div className="flex items-center gap-1.5 mb-1">
+              <div className="flex items-center gap-1.5 mb-1.5">
                 <span className="w-1.5 h-1.5 rounded-full pulse-glow" style={{ background: "var(--amber)" }} />
-                <span className="text-[8px] font-bold uppercase tracking-widest" style={{ color: "var(--amber)" }}>Encrypted Payload</span>
+                <span className="text-[8px] font-bold uppercase tracking-widest" style={{ color: "var(--amber)" }}>Encrypted Ciphertext (Hex)</span>
               </div>
-              <p className="text-[10px] break-all font-mono" style={{ color: "var(--text-muted)" }}>{log.hex.length > 120 ? log.hex.substring(0, 120) + "..." : log.hex}</p>
+              <p className="text-[10px] break-all font-mono select-all text-white" style={{ color: "var(--text-primary)", userSelect: "all" }}>{log.hex}</p>
             </div>
           )}
           {(log.pk_preview || log.ct_preview || log.secret_preview) && (

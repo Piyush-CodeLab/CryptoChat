@@ -500,6 +500,7 @@ async def handler(websocket):
                     "type": "engine_log",
                     "event": "serpent_encrypt",
                     "detail": f"Encrypted {len(plaintext_bytes)} bytes → {len(hex_ciphertext)//2} bytes ciphertext",
+                    "hex": hex_ciphertext,
                     "sender": sender["name"],
                     "timestamp": time.time()
                 }
@@ -523,6 +524,7 @@ async def handler(websocket):
                     "type": "engine_log",
                     "event": "serpent_decrypt",
                     "detail": f"Decrypted {len(hex_ciphertext)//2} bytes → {len(decrypted)} bytes plaintext",
+                    "hex": hex_ciphertext,
                     "timestamp": time.time()
                 }
 

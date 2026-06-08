@@ -106,8 +106,19 @@ function linearTransformInv(w) {
 
 function generateSubkeys(keyString) {
   const keyBytes = new Uint8Array(32);
-  for (let i = 0; i < Math.min(keyString.length, 32); i++) {
-    keyBytes[i] = keyString.charCodeAt(i);
+  const cleanKey = keyString.trim();
+  
+  // Check if it is a 64-character hex string representing a 256-bit key
+  const isHex256 = /^[0-9a-fA-F]{64}$/.test(cleanKey);
+  
+  if (isHex256) {
+    for (let i = 0; i < 32; i++) {
+      keyBytes[i] = parseInt(cleanKey.substr(i * 2, 2), 16);
+    }
+  } else {
+    for (let i = 0; i < Math.min(cleanKey.length, 32); i++) {
+      keyBytes[i] = cleanKey.charCodeAt(i);
+    }
   }
   
   const w = [];
@@ -271,7 +282,8 @@ export default function CipherVisualizer() {
 
   // Run Decryption Simulation
   const startDecryption = () => {
-    if (!decInput.trim()) return;
+    const cleanInput = decInput.trim();
+    if (!cleanInput) return;
     clearInterval(simIntervalRef.current);
     setDecPhase("keyschedule");
     setDecRound(31);
@@ -280,7 +292,20 @@ export default function CipherVisualizer() {
 
     setTimeout(() => {
       const subkeys = generateSubkeys(cipherKey);
-      const state = hexToWords(decInput.trim());
+      
+      // Auto-detect CBC mode (IV + Ciphertext block)
+      let state;
+      let ivWords = null;
+      if (cleanInput.length >= 64 && /^[0-9a-fA-F]+$/.test(cleanInput)) {
+        const ivPart = cleanInput.slice(0, 32);
+        const ctPart = cleanInput.slice(32, 64);
+        ivWords = hexToWords(ivPart);
+        state = hexToWords(ctPart);
+        setDecDetail("Serpent-CBC mode detected. Parsing IV and Block 1...");
+      } else {
+        state = hexToWords(cleanInput);
+      }
+      
       setDecState(state);
       setDecPhase("rounds");
       
@@ -327,10 +352,22 @@ export default function CipherVisualizer() {
           clearInterval(simIntervalRef.current);
           setDecPhase("completed");
           
+          // Perform CBC mode final XOR with IV if available
+          let finalState = [...activeState];
+          if (ivWords) {
+            finalState = [
+              (activeState[0] ^ ivWords[0]) >>> 0,
+              (activeState[1] ^ ivWords[1]) >>> 0,
+              (activeState[2] ^ ivWords[2]) >>> 0,
+              (activeState[3] ^ ivWords[3]) >>> 0,
+            ];
+            setDecState(finalState);
+          }
+          
           // Decode bytes & remove padding
           const bytes = new Uint8Array(16);
           for (let i = 0; i < 4; i++) {
-            const w = activeState[i];
+            const w = finalState[i];
             bytes[i * 4] = w & 0xff;
             bytes[i * 4 + 1] = (w >>> 8) & 0xff;
             bytes[i * 4 + 2] = (w >>> 16) & 0xff;
@@ -352,7 +389,7 @@ export default function CipherVisualizer() {
 
           const decodedText = new TextDecoder().decode(unpadded);
           setFinalPlaintext(decodedText);
-          setDecDetail("Decryption Completed! PKCS#7 padding removed.");
+          setDecDetail(ivWords ? "Decryption Completed! (Serpent-CBC mode, XORed with IV)" : "Decryption Completed! PKCS#7 padding removed.");
         }
       }, 60);
     }, 800);
